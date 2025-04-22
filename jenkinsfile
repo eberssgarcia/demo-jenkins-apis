@@ -6,56 +6,60 @@ pipeline {
         jdk 'openjdk-17'
     }
 
-   parameters {
-       choice(name: 'Ambiente', choices: ['dev', 'cert'], description: 'Ambiente de ejecucion (dev o cert)')
-       choice(name: 'tags', choices: ['@regresion', '@token', '@deleteUser', '@getUser', '@createUser', '@updateUser'], description: 'Tag de prueba Karate a ejecutar')
-   }
+    parameters {
+        choice(name: 'Ambiente', choices: ['dev', 'cert'], description: 'Ambiente de ejecución')
+        choice(name: 'tags', choices: ['@regresion', '@token', '@deleteUser', '@getUser', '@createUser', '@updateUser'], description: 'Tag de prueba Karate a ejecutar')
+    }
 
     options {
         timestamps()
         skipStagesAfterUnstable()
     }
 
+    stages {
 
-     stages {
-
-            stage('Checkout manual') {
-                steps {
-                    git url: 'https://github.com/eberssgarcia/demo-jenkins-apis.git', branch: 'develop'
-                    echo 'Código clonado manualmente desde Jenkinsfile.'
-                }
-            }
-
-            stage('Preparation') {
-                steps {
-                    cleanWs notFailBuild: true
-                    echo "Preparando ambiente..."
-                    echo "Ambiente seleccionado: ${params.Ambiente}"
-                    echo "Tag seleccionado: ${params.tags}"
-                }
-            }
-
-            stage('Build') {
-                steps {
-                    echo "Compilando proyecto..."
-                    bat 'mvn clean compile'
-                }
-            }
-
-            stage('Test') {
-                steps {
-                    echo "Ejecutando pruebas Karate..."
-                    bat "mvn test -Dkarate.options=\"--tags ${params.tags}\" -Dkarate.env=${params.Ambiente}"
-                }
-            }
-
-            stage('Post Execution') {
-                steps {
-                    echo "Post ejecución: reporte y limpieza"
-                }
+        stage('Clean Workspace') {
+            steps {
+                echo 'Limpiando workspace al inicio...'
+                cleanWs notFailBuild: true
             }
         }
 
+        stage('Checkout manual') {
+            steps {
+                git url: 'https://github.com/eberssgarcia/demo-jenkins-apis.git', branch: 'develop'
+                echo 'Código clonado manualmente desde Jenkinsfile.'
+            }
+        }
+
+        stage('Preparation') {
+            steps {
+                echo "Preparando ambiente..."
+                echo "Ambiente seleccionado: ${params.Ambiente}"
+                echo "Tag seleccionado: ${params.tags}"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Compilando proyecto..."
+                bat 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Ejecutando pruebas Karate..."
+                bat "mvn test -Dkarate.options=\"--tags ${params.tags}\" -Dkarate.env=${params.Ambiente}"
+            }
+        }
+
+        stage('Post Execution') {
+            steps {
+                echo "Post ejecución: reporte y limpieza"
+            }
+        }
+    }
 
     post {
         always {
