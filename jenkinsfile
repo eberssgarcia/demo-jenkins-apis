@@ -16,36 +16,46 @@ pipeline {
         skipStagesAfterUnstable()
     }
 
-    stages {
-        stage('Preparation') {
-            steps {
-                cleanWs notFailBuild: true
-                echo "🔧 Preparando ambiente..."
-                echo "Ambiente seleccionado: ${params.Ambiente}"
-                echo "Tag seleccionado: ${params.tags}"
+
+     stages {
+
+            stage('Checkout manual') {
+                steps {
+                    git url: 'https://github.com/eberssgarcia/demo-jenkins-apis.git', branch: 'develop'
+                    echo 'Código clonado manualmente desde Jenkinsfile.'
+                }
+            }
+
+            stage('Preparation') {
+                steps {
+                    cleanWs notFailBuild: true
+                    echo "Preparando ambiente..."
+                    echo "Ambiente seleccionado: ${params.Ambiente}"
+                    echo "Tag seleccionado: ${params.tags}"
+                }
+            }
+
+            stage('Build') {
+                steps {
+                    echo "Compilando proyecto..."
+                    bat 'mvn clean compile'
+                }
+            }
+
+            stage('Test') {
+                steps {
+                    echo "Ejecutando pruebas Karate..."
+                    bat "mvn test -Dkarate.options=\"--tags ${params.tags}\" -Dkarate.env=${params.Ambiente}"
+                }
+            }
+
+            stage('Post Execution') {
+                steps {
+                    echo "Post ejecución: reporte y limpieza"
+                }
             }
         }
 
-        stage('Build') {
-            steps {
-                echo "Compilando proyecto..."
-                bat 'mvn clean compile'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo "Ejecutando pruebas Karate..."
-                bat "mvn test -Dkarate.options=\"--tags ${params.tags}\" -Dkarate.env=${params.Ambiente}"
-            }
-        }
-
-        stage('Post Execution') {
-            steps {
-                echo "Post ejecución: reporte y limpieza"
-            }
-        }
-    }
 
     post {
         always {
