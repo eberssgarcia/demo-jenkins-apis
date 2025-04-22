@@ -17,14 +17,6 @@ pipeline {
     }
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/eberssgarcia/demo-jenkins-apis.git', branch: 'develop'
-                echo 'Código clonado correctamente.'
-            }
-        }
-
         stage('Preparation') {
             steps {
                 echo "Preparando ambiente..."
@@ -60,7 +52,7 @@ pipeline {
 
             cucumber buildStatus: 'UNCHANGED',
                      fileIncludePattern: '**/cucumber.json',
-                     jsonReportDirectory: 'target/cucumber-reports',
+                     jsonReportDirectory: 'target/cucumber-html-reports',
                      reportTitle: 'Karate Test Execution',
                      sortingMethod: 'ALPHABETICAL'
         }
