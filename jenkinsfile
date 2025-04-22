@@ -52,7 +52,7 @@ pipeline {
 
             cucumber buildStatus: 'UNCHANGED',
                      fileIncludePattern: '**/cucumber.json',
-                     jsonReportDirectory: 'target/cucumber-html-reports',
+                     jsonReportDirectory: 'target/cucumber-reports',
                      reportTitle: 'Karate Test Execution',
                      sortingMethod: 'ALPHABETICAL'
         }

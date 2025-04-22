@@ -15,8 +15,11 @@ public class labsTest {
     @Test
     void testParallel() {
         Results results = Runner.path("classpath:bdd")
-//                .tags("@token")
-                .outputCucumberJson(true).parallel(5);
+                .tags("@token")
+                .outputCucumberJson(true)
+                .reportDir("target/cucumber-reports")  // ← agrega esto
+                .parallel(5);
+
         generateReport(results.getReportDir());
         assertEquals(0, results.getFailCount(), results.getErrorMessages());
     }
