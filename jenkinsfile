@@ -7,7 +7,7 @@ pipeline {
     }
 
    parameters {
-       choice(name: 'Ambiente', choices: ['dev', 'cert'], description: 'Ambiente de ejecución (dev o cert)')
+       choice(name: 'Ambiente', choices: ['dev', 'cert'], description: 'Ambiente de ejecucion (dev o cert)')
        choice(name: 'tags', choices: ['@regresion', '@token', '@deleteUser', '@getUser', '@createUser', '@updateUser'], description: 'Tag de prueba Karate a ejecutar')
    }
 
@@ -28,28 +28,28 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "🏗️ Compilando proyecto..."
+                echo "Compilando proyecto..."
                 bat 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo "🧪 Ejecutando pruebas Karate..."
+                echo "Ejecutando pruebas Karate..."
                 bat "mvn test -Dkarate.options=\"--tags ${params.tags}\" -Dkarate.env=${params.Ambiente}"
             }
         }
 
         stage('Post Execution') {
             steps {
-                echo "📦 Post ejecución: reporte y limpieza"
+                echo "Post ejecución: reporte y limpieza"
             }
         }
     }
 
     post {
         always {
-            echo '📋 Finalizando pipeline...'
+            echo 'Finalizando pipeline...'
 
             cucumber buildStatus: 'UNCHANGED',
                      fileIncludePattern: '**/cucumber.json',
@@ -59,11 +59,11 @@ pipeline {
         }
 
         success {
-            echo '✅ Pipeline ejecutado correctamente.'
+            echo 'Pipeline ejecutado correctamente.'
         }
 
         failure {
-            echo '❌ El pipeline falló en algún punto.'
+            echo 'El pipeline falló en algún punto.'
         }
     }
 }
