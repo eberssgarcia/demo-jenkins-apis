@@ -18,17 +18,10 @@ pipeline {
 
     stages {
 
-        stage('Clean Workspace') {
-            steps {
-                echo 'Limpiando workspace al inicio...'
-                cleanWs notFailBuild: true
-            }
-        }
-
-        stage('Checkout manual') {
+        stage('Checkout') {
             steps {
                 git url: 'https://github.com/eberssgarcia/demo-jenkins-apis.git', branch: 'develop'
-                echo 'Código clonado manualmente desde Jenkinsfile.'
+                echo 'Código clonado correctamente.'
             }
         }
 
