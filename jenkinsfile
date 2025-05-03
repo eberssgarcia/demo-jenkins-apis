@@ -51,10 +51,18 @@ pipeline {
             echo 'Finalizando pipeline...'
 
             cucumber buildStatus: 'UNCHANGED',
-                     fileIncludePattern: '**/cucumber.json',
-                     jsonReportDirectory: 'target/cucumber-reports',
+                     customCssFiles: '',
+                     customJsFiles: '',
+                     failedFeaturesNumber: -1,
+                     failedScenariosNumber: -1,
+                     failedStepsNumber: -1,
+                     fileIncludePattern: '**/*.json',
+                     jsonReportDirectory: 'target/karate-reports',
+                     pendingStepsNumber: -1,
                      reportTitle: 'Karate Test Execution',
-                     sortingMethod: 'ALPHABETICAL'
+                     skippedStepsNumber: -1,
+                     sortingMethod: 'ALPHABETICAL',
+                     undefinedStepsNumber: -1
         }
 
         success {
